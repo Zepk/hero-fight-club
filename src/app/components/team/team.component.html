@@ -1,6 +1,39 @@
-<div *ngFor="let hero of firstTeam" class="portrait">
-  <img class="picture" src="{{hero.image}}" alt="{{alternateImage}}">
-</div>
+<span *ngIf="!isEmpty">
+  <div *ngFor="let hero of team" class="hero-container">
+    <div class="portrait">
+      <img class="picture" src="{{hero.image}}" (error)="onImgError($event)">
+    </div>
+    <div class="hero-data-container">
+      <div class="name">{{hero.name}}</div>
+      <div class="stat">HP: {{roundStat(hero.hp)}} / {{roundStat(hero.maxHp)}}</div>
+      <div class="stat-container">
+        <div class="stat">STR: {{roundStat(hero.strength)}}</div>
+        <div class="stat">SPD: {{roundStat(hero.speed)}}</div>
+        <div class="stat">INT: {{roundStat(hero.intelect)}}</div>
+        <div class="stat">POW: {{roundStat(hero.power)}}</div>
+        <div class="stat">COM: {{roundStat(hero.combat)}}</div>
+      </div>
+    </div>
+  </div>
+</span>
+
+<span *ngIf="isEmpty">
+  <div *ngFor="let hero of misteryManImageArray" class="hero-container">
+    <div class="portrait">
+      <img class="picture" src="{{misteryManImagePath}}">
+    </div>
+    <div class="hero-data-container">
+      <div class="name">MisteryMan</div>
+      <div class="stat">HP: 1 / 1</div>
+      <div class="stat-container">
+        <div class="stat">STR: 0</div>
+        <div class="stat">SPD: 0</div>
+        <div class="stat">INT: 0</div>
+        <div class="stat">POW: 0</div>
+        <div class="stat">COM: 0</div>
+      </div>
+    </div>
+  </div>
+</span>
 
 
-<button (click)="generateTeams()">Assemble random teams</button>

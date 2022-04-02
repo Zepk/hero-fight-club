@@ -1,1 +1,16 @@
-<p>fight works!</p>
+<div class="main-container">
+  <app-team [team]="firstTeam"></app-team>
+  <div>
+    <div class="button-container">
+      <button (click)="generateTeams()" class="btn">Assemble random teams</button>
+      <button (click)="fightOneRound()" class="btn">Fight 1 round</button>
+      <button (click)="generateTeams()" class="btn">Full Fight</button>
+    </div>
+    <div class="text-container">
+      {{fightText}}
+    </div>
+  </div>
+  <app-team [team]="secondTeam"></app-team>  
+</div>
+
+
