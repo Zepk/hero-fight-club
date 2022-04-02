@@ -7,11 +7,13 @@ import { TeamComponent } from './components/team/team.component';
 import { HeroService } from './services/hero.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Utils } from './utils/utils';
+import { FightComponent } from './components/fight/fight.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TeamComponent
+    TeamComponent,
+    FightComponent
   ],
   imports: [
     BrowserModule,

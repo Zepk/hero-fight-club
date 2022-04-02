@@ -15,7 +15,6 @@ export class HeroService {
       params: {heroId: heroId.toString()}
     }).toPromise()
       .then((response) => response)
-      // TODO: handle error
       .catch((error) => console.log(error));
   }
 }

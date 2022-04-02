@@ -1,2 +1,6 @@
-<p>team works!</p>
+<div *ngFor="let hero of firstTeam" class="portrait">
+  <img class="picture" src="{{hero.image}}" alt="{{alternateImage}}">
+</div>
+
+
 <button (click)="generateTeams()">Assemble random teams</button>
