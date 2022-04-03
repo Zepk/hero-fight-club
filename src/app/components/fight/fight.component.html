@@ -6,9 +6,9 @@
   
   <div>
     <div class="button-container">
-      <button (click)="generateTeams()" class="btn" [disabled]="firstLoad">Assemble random teams</button>
-      <button (click)="fightOneRound()" class="btn" [disabled]="!canFight">Fight 1 round</button>
-      <button (click)="fullFight()" class="btn" [disabled]="!canFight">Full Fight</button>
+      <button (click)="generateTeams()" class="btn" [disabled]="firstLoad">Generar equipos al azar</button>
+      <button (click)="fightOneRound()" class="btn" [disabled]="!canFight">Pelear 1 ronda</button>
+      <button (click)="fullFight()" class="btn" [disabled]="!canFight">Batalla Completa</button>
     </div>
     <div class="text-container">
       {{fightText}}
@@ -19,9 +19,11 @@
     <div class="email-form-container">
       <form [formGroup]="form" (ngSubmit)="sendEmail()" autocomplete="off">
         <input type="email" formControlName="email" placeholder="youremail@domain.com">
-        <button type="submit" class="btn" [disabled]="canFight || form.invalid">Send email</button>
+        <button type="submit" class="btn" [disabled]="canFight || form.invalid || emailSent">Enviar email</button>
       </form>
     </div>
+
+    <h5 *ngIf="emailSent" class="centered">Email enviado</h5>
 
   </div>
   <div class="team-component-container">

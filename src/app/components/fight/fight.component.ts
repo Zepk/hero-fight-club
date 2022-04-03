@@ -26,6 +26,7 @@ export class FightComponent implements OnInit {
   public firstLoad = true;
   public firstTeamName = FIRST_TEAM_NAME;
   public secondTeamName = SECOND_TEAM_NAME;
+  public emailSent = false;
   public form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email, Validators.pattern(EMAIL_PATTERN)]],
   });
@@ -99,6 +100,7 @@ export class FightComponent implements OnInit {
     emailText += `<br><br><b>${this.endText}</b>`;
     
     this.heroService.sendEmail('Resumen de la Batalla', emailText, this.form.value.email);
+    this.emailSent = true;
   }
 
   private setAliveHeroes(): void {
@@ -141,6 +143,7 @@ export class FightComponent implements OnInit {
   public generateTeams(): void {
     this.teamsReady = false;
     this.round = 0;
+    this.emailSent = false;
     this.fightText = '';
     this.generateRandomHeroIds();
     const heroIdArray = [...this.heroIdSet!]
