@@ -46,33 +46,33 @@ export class FightComponent implements OnInit {
   }
 
   public get endText(): string {
-    if (this.canFight) return '';
-    if (this.firstTeamAliveHeroes.length > 0 && this.secondTeamAliveHeroes.length == 0 ) {
+    if (this.canFight) { return ''; }
+    if (this.firstTeamAliveHeroes.length > 0 && this.secondTeamAliveHeroes.length === 0 ) {
       return `¡El ${this.firstTeamName} Ganó!`;
     }
-    if (this.secondTeamAliveHeroes.length > 0 && this.firstTeamAliveHeroes.length == 0) {
+    if (this.secondTeamAliveHeroes.length > 0 && this.firstTeamAliveHeroes.length === 0) {
       return `¡El ${this.secondTeamName} Ganó!`;
     }
     return '¡La batalla fué un empate!';
   }
 
   public addFightText(hero: Hero, enemyObjective: Hero, attackType: string, damageDone: number): void {
-    const textDamage = Math.floor(damageDone)
-    const textHp = Math.floor(enemyObjective.hp)
+    const textDamage = Math.floor(damageDone);
+    const textHp = Math.floor(enemyObjective.hp);
     this.fightText = this.fightText.concat(`${hero.name} ha utilizado un ataque ${attackType} contra ${enemyObjective.name}, realizando ${textDamage} de daño\n`);
     this.fightText = this.fightText.concat(`${enemyObjective.name} tiene ${textHp} HP restante\n\n`);
   }
 
   public fullFight(): void {
-    while(this.canFight) {
+    while (this.canFight) {
       this.fightOneRound();
     }
   }
 
   public fightOneRound(): void {
-    if (!this.canFight) return;
+    if (!this.canFight) { return; }
     this.round += 1;
-    this.fightText = this.fightText.concat(`\nINICIA LA RONDA#${this.round}\n\n`)
+    this.fightText = this.fightText.concat(`\nINICIA LA RONDA#${this.round}\n\n`);
     this.attackTeam(this.firstTeamAliveHeroes, this.secondTeamAliveHeroes);
     this.attackTeam(this.secondTeamAliveHeroes, this.firstTeamAliveHeroes);
     this.setAliveHeroes();
@@ -81,24 +81,24 @@ export class FightComponent implements OnInit {
   public sendEmail(): void {
     let emailText = `El equipo alpha está formado por: `;
     this.firstTeam.forEach((hero, index) => {
-      if (index != this.firstTeam.length - 1) {
-        emailText += ` ${hero.name}, `;
-      } else {
-        emailText += ` ${hero.name}.`
-      }
-    });
-
-    emailText += '<br><br>El equipo beta está formado por:';
-    this.secondTeam.forEach((hero, index) => {
-      if (index != this.secondTeam.length - 1) {
+      if (index !== this.firstTeam.length - 1) {
         emailText += ` ${hero.name}, `;
       } else {
         emailText += ` ${hero.name}.`;
       }
     });
-    
+
+    emailText += '<br><br>El equipo beta está formado por:';
+    this.secondTeam.forEach((hero, index) => {
+      if (index !== this.secondTeam.length - 1) {
+        emailText += ` ${hero.name}, `;
+      } else {
+        emailText += ` ${hero.name}.`;
+      }
+    });
+
     emailText += `<br><br><b>${this.endText}</b>`;
-    
+
     this.heroService.sendEmail('Resumen de la Batalla', emailText, this.form.value.email);
     this.emailSent = true;
   }
@@ -106,26 +106,26 @@ export class FightComponent implements OnInit {
   private setAliveHeroes(): void {
     this.firstTeam.forEach((hero) => {
       if (hero.hp <= 0) {
-        this.firstTeamAliveHeroes = this.firstTeamAliveHeroes.filter(hero => (hero.hp > 0));
+        this.firstTeamAliveHeroes = this.firstTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
       }
-    })
+    });
     this.secondTeam.forEach((hero) => {
       if (hero.hp <= 0) {
-        this.secondTeamAliveHeroes = this.secondTeamAliveHeroes.filter(hero => (hero.hp > 0));
+        this.secondTeamAliveHeroes = this.secondTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
       }
-    })
+    });
   }
 
   private attackTeam(attackingTeamAlive: Array<Hero>, defendingTeamAlive: Array<Hero>): void {
     attackingTeamAlive.forEach(hero => {
       const attackType = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
       const damageDone = this.calculateDamageDone(hero, attackType);
-      const radomNumber = Math.floor(Math.random() * defendingTeamAlive.length)
+      const radomNumber = Math.floor(Math.random() * defendingTeamAlive.length);
       const enemyObjective = defendingTeamAlive[radomNumber];
       enemyObjective.hp -= damageDone;
-      if (enemyObjective.hp < 0) enemyObjective.hp = 0;
+      if (enemyObjective.hp < 0) { enemyObjective.hp = 0; }
       this.addFightText(hero, enemyObjective, attackType, damageDone);
-    })
+    });
   }
 
 
@@ -146,14 +146,14 @@ export class FightComponent implements OnInit {
     this.emailSent = false;
     this.fightText = '';
     this.generateRandomHeroIds();
-    const heroIdArray = [...this.heroIdSet!]
+    const heroIdArray = [...this.heroIdSet!];
     forkJoin(
       [].concat.apply([],
           heroIdArray.map(item => [
           this.heroService.getHero(item),
         ])
       )
-    ).subscribe((response)=>{this.setTeams(response)});
+    ).subscribe((response) => { this.setTeams(response); } );
   }
 
   // Creates the two hero teams with correct stats
@@ -178,10 +178,10 @@ export class FightComponent implements OnInit {
 
   // Returns an array of heroes with respective stats
   private generateHeroes(teamDataArray): Array<Hero> {
-    let heroArray = Array<Hero>();
+    const heroArray = Array<Hero>();
     const teamAlignement = this.getTeamAlignement(teamDataArray);
     teamDataArray.forEach((heroData) => {
-      const {powerstats, id, alignment, name, image} = heroData
+      const {powerstats, id, alignment, name, image} = heroData;
       const alignementModifier = this.getAlignementModifier(teamAlignement, alignment);
       const actualStamina = this.utils.getRandomInt(0, 10);
 
@@ -199,7 +199,7 @@ export class FightComponent implements OnInit {
       const power = this.getStat(basePower, actualStamina, alignementModifier);
       const intelect = this.getStat(baseIntelect, actualStamina, alignementModifier);
       const combat = this.getStat(baseCombat, actualStamina, alignementModifier);
-      const speed = this.getStat(baseSpeed, actualStamina, alignementModifier)
+      const speed = this.getStat(baseSpeed, actualStamina, alignementModifier);
 
       const newHero = {
         maxHp: hp,
@@ -217,40 +217,42 @@ export class FightComponent implements OnInit {
       } as Hero;
 
       heroArray.push(newHero);
-    })
+    });
     return heroArray;
   }
 
   private getAlignementModifier(teamAlignement: string, heroAlignement: string): number {
-    if (heroAlignement === teamAlignement) return this.utils.getRandomInt(1, 10);
-    return (this.utils.getRandomInt(1, 10) ** -1); 
+    if (heroAlignement === teamAlignement) { return this.utils.getRandomInt(1, 10); }
+    return (this.utils.getRandomInt(1, 10) ** -1);
   }
 
   // Calculates final stats using base stats and modifiers
   private getStat(baseStat: number, actualStamina: number, alignementModifier: number): number {
     return ((2 * baseStat + actualStamina) / 1.1) * alignementModifier;
   }
-  
+
   private getHp(strength: number, durability: number, power: number, actualStamina: number): number {
     const baseHp = (strength * 0.8 + durability * 0.7 + power) / 2;
-    const actualStaminaModifier = 1 + actualStamina/10
-    return (baseHp * actualStaminaModifier) + 100
+    const actualStaminaModifier = 1 + actualStamina / 10;
+    return (baseHp * actualStaminaModifier) + 100;
   }
 
   private getTeamAlignement(teamDataArray: any[]): string {
-    let alignment = 0
+    let alignment = 0;
     teamDataArray.forEach((heroData) => {
-      if (heroData?.alignment == 'good') {
+      if (heroData?.alignment === 'good') {
         alignment += 1;
-      } else if (heroData?.alignment == 'bad') {
+      } else if (heroData?.alignment === 'bad') {
         alignment -= 1;
       }
-    })
-    if (alignment > 0) { 
-      return 'good'
-    } else if (alignment < 0) { 
-      return 'bad'
-    } else return 'neutral'
+    });
+
+    if (alignment > 0) {
+      return 'good';
+    } else if (alignment < 0) {
+      return 'bad';
+    }
+    return 'neutral';
   }
 }
 

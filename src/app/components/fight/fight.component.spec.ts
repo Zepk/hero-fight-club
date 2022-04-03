@@ -31,13 +31,13 @@ describe('FightComponent', () => {
   });
 
   describe('fullFight()', () => {
-    
+
     it('if canFigth is false, should not call fightOneRound.', () => {
       spyOn<any>(component, 'canFight').and.returnValue(false);
       const fightOneRoundSpy = spyOn(component, 'fightOneRound').and.returnValue();
       component.fullFight();
       expect(fightOneRoundSpy).not.toHaveBeenCalled();
-    }) 
+    });
   });
 
   describe('fightOneRound', () => {
@@ -45,10 +45,10 @@ describe('FightComponent', () => {
     let attackTeamSpy: jasmine.Spy;
 
     beforeEach(() => {
-      setAliveHeroesSpy = spyOn<any>(component, 'setAliveHeroes').and.callFake(()=>{});
-      attackTeamSpy = spyOn<any>(component, 'attackTeam').and.callFake(()=>{});
+      setAliveHeroesSpy = spyOn<any>(component, 'setAliveHeroes').and.callFake(() => {});
+      attackTeamSpy = spyOn<any>(component, 'attackTeam').and.callFake(() => {});
       spyOn<any>(component, 'canFight').and.returnValue(true);
-    })
+    });
 
     it('should do nothing if canFight is false.', () => {
       component.firstTeam = [];

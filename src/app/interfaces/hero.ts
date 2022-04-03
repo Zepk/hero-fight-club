@@ -5,7 +5,7 @@ export interface Hero {
   strength: number;
   speed: number;
   intelect: number;
-  durability: number
+  durability: number;
   power: number;
   combat: number;
   id: number;
