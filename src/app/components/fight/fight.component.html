@@ -1,16 +1,33 @@
 <div class="main-container">
-  <app-team [team]="firstTeam"></app-team>
+  <div class="team-component-container">
+    <h3>{{firstTeamName}}</h3>
+    <app-team [team]="firstTeam"></app-team>
+  </div>
+  
   <div>
     <div class="button-container">
-      <button (click)="generateTeams()" class="btn">Assemble random teams</button>
-      <button (click)="fightOneRound()" class="btn">Fight 1 round</button>
-      <button (click)="generateTeams()" class="btn">Full Fight</button>
+      <button (click)="generateTeams()" class="btn" [disabled]="firstLoad">Assemble random teams</button>
+      <button (click)="fightOneRound()" class="btn" [disabled]="!canFight">Fight 1 round</button>
+      <button (click)="fullFight()" class="btn" [disabled]="!canFight">Full Fight</button>
     </div>
     <div class="text-container">
       {{fightText}}
     </div>
+
+    <h1 *ngIf="!canFight && !firstLoad && teamsReady" class="centered">{{endText}}</h1>
+
+    <div class="email-form-container">
+      <form [formGroup]="form" (ngSubmit)="sendEmail()" autocomplete="off">
+        <input type="email" formControlName="email" placeholder="youremail@domain.com">
+        <button type="submit" class="btn" [disabled]="canFight || form.invalid">Send email</button>
+      </form>
+    </div>
+
   </div>
-  <app-team [team]="secondTeam"></app-team>  
+  <div class="team-component-container">
+    <h3>{{secondTeamName}}</h3>
+    <app-team [team]="secondTeam"></app-team>
+  </div>
 </div>
 
 

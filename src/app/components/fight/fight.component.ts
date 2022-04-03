@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { HeroService } from 'src/app/services/hero.service';
 import { Utils } from 'src/app/utils/utils';
 import { MIN_HERO_ID, MAX_HERO_ID, MISTERY_MAN_IMAGE_PATH, ATTACK_TYPES, MENTAL_ATTACK,
-         FAST_ATTACK, STRONG_ATTACK} from 'src/app/constants/constants';
+         FAST_ATTACK, STRONG_ATTACK, FIRST_TEAM_NAME, SECOND_TEAM_NAME, EMAIL_PATTERN} from 'src/app/constants/constants';
 import { forkJoin } from 'rxjs';
 import { Hero } from 'src/app/interfaces/hero';
+import { FormBuilder, Validators } from '@angular/forms';
 
 
 @Component({
@@ -21,12 +22,18 @@ export class FightComponent implements OnInit {
   public alternateImage = MISTERY_MAN_IMAGE_PATH;
   public fightText = '';
   public round = 0;
-  private teamsReady = false;
-
+  public teamsReady = false;
+  public firstLoad = true;
+  public firstTeamName = FIRST_TEAM_NAME;
+  public secondTeamName = SECOND_TEAM_NAME;
+  public form = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email, Validators.pattern(EMAIL_PATTERN)]],
+  });
 
   constructor(
     private readonly heroService: HeroService,
     private utils: Utils,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void {
@@ -36,18 +43,59 @@ export class FightComponent implements OnInit {
   public addFightText(hero: Hero, enemyObjective: Hero, attackType: string, damageDone: number) {
     const textDamage = Math.floor(damageDone)
     const textHp = Math.floor(enemyObjective.hp)
-    this.fightText = this.fightText.concat(`${hero.name} ha utilizado un ataque ${attackType} contra ${enemyObjective.name}, realizando ${textDamage} daño\n`);
-    this.fightText = this.fightText.concat(`${enemyObjective.name} tiene ${textHp} HP restante\n`);
+    this.fightText = this.fightText.concat(`${hero.name} ha utilizado un ataque ${attackType} contra ${enemyObjective.name}, realizando ${textDamage} de daño\n`);
+    this.fightText = this.fightText.concat(`${enemyObjective.name} tiene ${textHp} HP restante\n\n`);
+  }
+
+  public sendEmail(): void {
+    let emailText = `El equipo alpha está formado por: `;
+    this.firstTeam.forEach((hero, index) => {
+      if (index != this.firstTeam.length - 1) {
+        emailText += ` ${hero.name}, `;
+      } else {
+        emailText += ` ${hero.name}.`
+      }
+    });
+
+    emailText += '<br><br>El equipo beta está formado por:';
+    this.secondTeam.forEach((hero, index) => {
+      if (index != this.secondTeam.length - 1) {
+        emailText += ` ${hero.name}, `;
+      } else {
+        emailText += ` ${hero.name}.`;
+      }
+    });
+    
+    emailText += `<br><br><b>${this.endText}</b>`;
+    
+    this.heroService.sendEmail('Resumen de la Batalla', emailText, this.form.value.email);
   }
 
   public get canFight(): boolean {
     return this.teamsReady && this.firstTeamAliveHeroes.length > 0 && this.secondTeamAliveHeroes.length > 0;
   }
 
+  public get endText(): string {
+    if (this.canFight) return '';
+    if (this.firstTeamAliveHeroes.length > 0 && this.secondTeamAliveHeroes.length == 0 ) {
+      return `¡El ${this.firstTeamName} Ganó!`;
+    }
+    if (this.secondTeamAliveHeroes.length > 0 && this.firstTeamAliveHeroes.length == 0) {
+      return `¡El ${this.secondTeamName} Ganó!`;
+    }
+    return '¡La batalla fué un empate!';
+  }
+
+  public fullFight(): void {
+    while(this.canFight) {
+      this.fightOneRound();
+    }
+  }
+
   public fightOneRound(): void {
     if (!this.canFight) return;
     this.round += 1;
-    this.fightText = this.fightText.concat(`\nINICIA LA RONDA#${this.round}\n`)
+    this.fightText = this.fightText.concat(`\nINICIA LA RONDA#${this.round}\n\n`)
     this.attackTeam(this.firstTeamAliveHeroes, this.secondTeamAliveHeroes);
     this.attackTeam(this.secondTeamAliveHeroes, this.firstTeamAliveHeroes);
     this.setAliveHeroes();
@@ -103,7 +151,6 @@ export class FightComponent implements OnInit {
         ])
       )
     ).subscribe((response)=>{this.setTeams(response)});
-    
   }
 
   // Creates the two hero teams with correct stats
@@ -115,6 +162,7 @@ export class FightComponent implements OnInit {
     this.secondTeam = this.generateHeroes(secondHalf);
     this.secondTeamAliveHeroes = this.secondTeam;
     this.teamsReady = true;
+    this.firstLoad = false;
   }
 
   private generateRandomHeroIds(): void {
@@ -186,7 +234,7 @@ export class FightComponent implements OnInit {
     return (baseHp * actualStaminaModifier) + 100
   }
 
-  private getTeamAlignement(teamDataArray) {
+  private getTeamAlignement(teamDataArray): string {
     let alignment = 0
     teamDataArray.forEach((heroData) => {
       if (heroData.alignment == 'good') {

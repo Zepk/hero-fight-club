@@ -8,6 +8,7 @@ import { HeroService } from './services/hero.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Utils } from './utils/utils';
 import { FightComponent } from './components/fight/fight.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { FightComponent } from './components/fight/fight.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [HeroService, Utils],
   bootstrap: [AppComponent]

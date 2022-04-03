@@ -17,7 +17,11 @@ export class HeroService {
       .then((response) => response)
       .catch((error) => console.log(error));
   }
+
+  public async sendEmail(subject: string, content: string, email: string): Promise<any> {
+    const body = {subject, content, email};
+    return this.http.post(`http://localhost:3000/email`, body)
+      .subscribe((response) => response);
+
+  }
 }
-
-
-

@@ -14,11 +14,25 @@
     }
   }
 
+  .team-component-container {
+    display: flex;
+    flex-direction: column;
+  }
+
   .text-container {
     width: 600px;
     max-height: 300px;
     overflow: scroll;
     padding-left: 12px;
     white-space: pre;
+  }
+
+  .centered {
+    text-align: center;
+  }
+
+  .email-form-container {
+    display: flex;
+    justify-content: center;
   }
 }

@@ -5,3 +5,6 @@ export const MENTAL_ATTACK = 'mental';
 export const STRONG_ATTACK = 'strong';
 export const FAST_ATTACK = 'fast';
 export const ATTACK_TYPES = [MENTAL_ATTACK, STRONG_ATTACK, FAST_ATTACK];
+export const FIRST_TEAM_NAME = 'Equipo Alpha';
+export const SECOND_TEAM_NAME = 'Equipo Beta';
+export const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
