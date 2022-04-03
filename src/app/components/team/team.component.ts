@@ -24,7 +24,6 @@ export class TeamComponent implements OnInit {
 
   public onImgError(event): void {
     event.target.src = this.misteryManImagePath
-   //Do other stuff with the event.target
    }
 
    roundStat(stat: number): number {
