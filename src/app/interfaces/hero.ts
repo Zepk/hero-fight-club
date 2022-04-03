@@ -11,5 +11,5 @@ export interface Hero {
   id: number;
   image?: string;
   name: string;
-  alignementModifier: number;
+  alignmentModifier: number;
 }

@@ -28,3 +28,13 @@ $ npm link @angular/cli@10.0.5
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
+## Notes
+
+The hero API returns null stats for some heroes, in that case it was assumed that the hero had a stat of 0 in said field.
+
+In every round of the fight, all attack are simultaneous, so a hero might have his HP frop to 0 and still be able to land an attack on said round.
+
+Since there are 3 different hero alignments (good, bad and neutral), a team is considered neutral if neither good or bad heroes have a majority.
+
+
+

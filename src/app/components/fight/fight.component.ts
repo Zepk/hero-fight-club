@@ -53,7 +53,7 @@ export class FightComponent implements OnInit {
     if (this.secondTeamAliveHeroes.length > 0 && this.firstTeamAliveHeroes.length === 0) {
       return `¡El ${this.secondTeamName} Ganó!`;
     }
-    return '¡La batalla fué un empate!';
+    return '¡La batalla fue un empate!';
   }
 
   public addFightText(hero: Hero, enemyObjective: Hero, attackType: string, damageDone: number): void {
@@ -104,24 +104,16 @@ export class FightComponent implements OnInit {
   }
 
   private setAliveHeroes(): void {
-    this.firstTeam.forEach((hero) => {
-      if (hero.hp <= 0) {
-        this.firstTeamAliveHeroes = this.firstTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
-      }
-    });
-    this.secondTeam.forEach((hero) => {
-      if (hero.hp <= 0) {
-        this.secondTeamAliveHeroes = this.secondTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
-      }
-    });
+    this.firstTeamAliveHeroes = this.firstTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
+    this.secondTeamAliveHeroes = this.secondTeamAliveHeroes.filter(aliveHero => (aliveHero.hp > 0));
   }
 
   private attackTeam(attackingTeamAlive: Array<Hero>, defendingTeamAlive: Array<Hero>): void {
     attackingTeamAlive.forEach(hero => {
       const attackType = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
       const damageDone = this.calculateDamageDone(hero, attackType);
-      const radomNumber = Math.floor(Math.random() * defendingTeamAlive.length);
-      const enemyObjective = defendingTeamAlive[radomNumber];
+      const randomEnemyIndex = Math.floor(Math.random() * defendingTeamAlive.length);
+      const enemyObjective = defendingTeamAlive[randomEnemyIndex];
       enemyObjective.hp -= damageDone;
       if (enemyObjective.hp < 0) { enemyObjective.hp = 0; }
       this.addFightText(hero, enemyObjective, attackType, damageDone);
@@ -132,11 +124,11 @@ export class FightComponent implements OnInit {
   private calculateDamageDone(hero: Hero, attackType: string): number {
     switch (attackType) {
       case MENTAL_ATTACK:
-        return (hero.intelect * 0.7 + hero.speed * 0.2 + hero.combat * 0.1) * hero.alignementModifier;
+        return (hero.intelect * 0.7 + hero.speed * 0.2 + hero.combat * 0.1) * hero.alignmentModifier;
       case STRONG_ATTACK:
-        return (hero.strength * 0.6 + hero.power * 0.2 + hero.combat * 0.2) * hero.alignementModifier;
+        return (hero.strength * 0.6 + hero.power * 0.2 + hero.combat * 0.2) * hero.alignmentModifier;
       case FAST_ATTACK:
-        return (hero.speed * 0.55 + hero.durability * 0.25 + hero.strength * 0.2) * hero.alignementModifier;
+        return (hero.speed * 0.55 + hero.durability * 0.25 + hero.strength * 0.2) * hero.alignmentModifier;
     }
   }
 
@@ -179,10 +171,10 @@ export class FightComponent implements OnInit {
   // Returns an array of heroes with respective stats
   private generateHeroes(teamDataArray): Array<Hero> {
     const heroArray = Array<Hero>();
-    const teamAlignement = this.getTeamAlignement(teamDataArray);
+    const teamAlignment = this.getTeamAlignment(teamDataArray);
     teamDataArray.forEach((heroData) => {
       const {powerstats, id, alignment, name, image} = heroData;
-      const alignementModifier = this.getAlignementModifier(teamAlignement, alignment);
+      const alignmentModifier = this.getAlignmentModifier(teamAlignment, alignment);
       const actualStamina = this.utils.getRandomInt(0, 10);
 
       // Some heroes have null values, so they are replaced with 0
@@ -194,12 +186,12 @@ export class FightComponent implements OnInit {
       const baseSpeed = powerstats?.speed | 0;
 
       const hp = this.getHp(baseStrength, baseDurability, basePower, actualStamina);
-      const strength = this.getStat(baseStrength, actualStamina, alignementModifier);
-      const durability = this.getStat(baseDurability, actualStamina, alignementModifier);
-      const power = this.getStat(basePower, actualStamina, alignementModifier);
-      const intelect = this.getStat(baseIntelect, actualStamina, alignementModifier);
-      const combat = this.getStat(baseCombat, actualStamina, alignementModifier);
-      const speed = this.getStat(baseSpeed, actualStamina, alignementModifier);
+      const strength = this.getStat(baseStrength, actualStamina, alignmentModifier);
+      const durability = this.getStat(baseDurability, actualStamina, alignmentModifier);
+      const power = this.getStat(basePower, actualStamina, alignmentModifier);
+      const intelect = this.getStat(baseIntelect, actualStamina, alignmentModifier);
+      const combat = this.getStat(baseCombat, actualStamina, alignmentModifier);
+      const speed = this.getStat(baseSpeed, actualStamina, alignmentModifier);
 
       const newHero = {
         maxHp: hp,
@@ -213,7 +205,7 @@ export class FightComponent implements OnInit {
         id,
         image: image.url,
         name,
-        alignementModifier
+        alignmentModifier
       } as Hero;
 
       heroArray.push(newHero);
@@ -221,14 +213,14 @@ export class FightComponent implements OnInit {
     return heroArray;
   }
 
-  private getAlignementModifier(teamAlignement: string, heroAlignement: string): number {
-    if (heroAlignement === teamAlignement) { return this.utils.getRandomInt(1, 10); }
+  private getAlignmentModifier(teamAlignment: string, heroAlignment: string): number {
+    if (heroAlignment === teamAlignment) { return this.utils.getRandomInt(1, 10); }
     return (this.utils.getRandomInt(1, 10) ** -1);
   }
 
   // Calculates final stats using base stats and modifiers
-  private getStat(baseStat: number, actualStamina: number, alignementModifier: number): number {
-    return ((2 * baseStat + actualStamina) / 1.1) * alignementModifier;
+  private getStat(baseStat: number, actualStamina: number, alignmentModifier: number): number {
+    return ((2 * baseStat + actualStamina) / 1.1) * alignmentModifier;
   }
 
   private getHp(strength: number, durability: number, power: number, actualStamina: number): number {
@@ -237,7 +229,7 @@ export class FightComponent implements OnInit {
     return (baseHp * actualStaminaModifier) + 100;
   }
 
-  private getTeamAlignement(teamDataArray: any[]): string {
+  private getTeamAlignment(teamDataArray: any[]): string {
     let alignment = 0;
     teamDataArray.forEach((heroData) => {
       if (heroData?.alignment === 'good') {
